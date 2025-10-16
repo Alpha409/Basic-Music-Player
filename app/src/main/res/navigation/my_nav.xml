@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/home2">
+
+    <fragment
+        android:id="@+id/home2"
+        android:name="com.example.musicplayer.ui.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_home2_to_favourite"
+            app:destination="@id/favourite" />
+        <action
+            android:id="@+id/action_home2_to_artist"
+            app:destination="@id/artist" />
+        <action
+            android:id="@+id/action_home2_to_playList"
+            app:destination="@id/playList" />
+        <action
+            android:id="@+id/action_home2_to_myMusic"
+            app:destination="@id/myMusic" />
+        <action
+            android:id="@+id/action_home2_self"
+            app:destination="@id/home2" />
+    </fragment>
+    <fragment
+        android:id="@+id/myMusic"
+        android:name="com.example.musicplayer.ui.fragments.MyMusicFragment"
+        android:label="fragment_my_music"
+        tools:layout="@layout/fragment_my_music" >
+        <action
+            android:id="@+id/action_myMusic_to_favourite"
+            app:destination="@id/favourite" />
+        <action
+            android:id="@+id/action_myMusic_to_playList"
+            app:destination="@id/playList" />
+        <action
+            android:id="@+id/action_myMusic_to_artist"
+            app:destination="@id/artist" />
+        <action
+            android:id="@+id/action_myMusic_to_home2"
+            app:destination="@id/home2" />
+        <action
+            android:id="@+id/action_myMusic_self"
+            app:destination="@id/myMusic" />
+    </fragment>
+    <fragment
+        android:id="@+id/artist"
+        android:name="com.example.musicplayer.ui.fragments.ArtistFragment"
+        android:label="fragment_artist"
+        tools:layout="@layout/fragment_artist" >
+        <action
+            android:id="@+id/action_artist_to_playList"
+            app:destination="@id/playList" />
+        <action
+            android:id="@+id/action_artist_to_myMusic"
+            app:destination="@id/myMusic" />
+        <action
+            android:id="@+id/action_artist_to_home2"
+            app:destination="@id/home2" />
+        <action
+            android:id="@+id/action_artist_to_favourite"
+            app:destination="@id/favourite" />
+        <action
+            android:id="@+id/action_artist_self"
+            app:destination="@id/artist" />
+    </fragment>
+    <fragment
+        android:id="@+id/playList"
+        android:name="com.example.musicplayer.ui.fragments.PlayListFragment"
+        android:label="fragment_play_list"
+        tools:layout="@layout/fragment_play_list" >
+        <action
+            android:id="@+id/action_playList_to_myMusic"
+            app:destination="@id/myMusic" />
+        <action
+            android:id="@+id/action_playList_to_favourite"
+            app:destination="@id/favourite" />
+        <action
+            android:id="@+id/action_playList_to_artist"
+            app:destination="@id/artist" />
+        <action
+            android:id="@+id/action_playList_to_home2"
+            app:destination="@id/home2" />
+        <action
+            android:id="@+id/action_playList_self"
+            app:destination="@id/playList" />
+    </fragment>
+    <fragment
+        android:id="@+id/favourite"
+        android:name="com.example.musicplayer.ui.fragments.FavouriteFragment"
+        android:label="fragment_favourite"
+        tools:layout="@layout/fragment_favourite" >
+        <action
+            android:id="@+id/action_favourite_to_myMusic"
+            app:destination="@id/myMusic" />
+        <action
+            android:id="@+id/action_favourite_to_playList"
+            app:destination="@id/playList" />
+        <action
+            android:id="@+id/action_favourite_to_artist"
+            app:destination="@id/artist" />
+        <action
+            android:id="@+id/action_favourite_to_home2"
+            app:destination="@id/home2" />
+        <action
+            android:id="@+id/action_favourite_self"
+            app:destination="@id/favourite" />
+    </fragment>
+</navigation>

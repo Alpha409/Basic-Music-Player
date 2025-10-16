@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_item_favor"
+        android:title="@string/do_a_favor"
+        android:icon="@drawable/menudofavor"/>
+    <item
+        android:id="@+id/menu_item_share"
+        android:title="@string/share_app"
+        />
+    <item
+        android:id="@+id/menu_item_rate_us"
+        android:title="@string/rate_us" />
+    <item
+        android:id="@+id/menu_item_feedback"
+        android:title="@string/feedback" />
+    <item
+        android:id="@+id/menu_item_privacy"
+        android:title="@string/privacy_policy" />
+</menu>

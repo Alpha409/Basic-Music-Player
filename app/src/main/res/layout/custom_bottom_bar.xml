@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@color/black">
+
+    <LinearLayout
+        android:id="@+id/linear_music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/linear_artist"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/image_here"
+            android:src="@drawable/music" />
+
+        <TextView
+            android:id="@+id/my_music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/my_music"
+            android:textAppearance="@style/my_music" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_artist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/linear_music"
+        app:layout_constraintRight_toLeftOf="@id/linear_home"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/image_here"
+            android:src="@drawable/artist"
+            app:layout_constraintBottom_toTopOf="@+id/txt_artist"
+            app:layout_constraintLeft_toRightOf="@+id/iv_music"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/artist"
+            android:textAppearance="@style/artist" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_home"
+        android:layout_width="@dimen/_48sdp"
+        android:layout_height="@dimen/_48sdp"
+        android:background="@drawable/eclipse"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/linear_artist"
+        app:layout_constraintRight_toLeftOf="@+id/linear_playlist"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/image_here"
+            android:src="@drawable/home" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_playlist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/linear_home"
+        app:layout_constraintRight_toLeftOf="@id/linear_favourite"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_playlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/image_here"
+            android:src="@drawable/playlist" />
+
+        <TextView
+            android:id="@+id/playlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/playlist"
+            android:textAppearance="@style/playlist" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_favourite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/linear_playlist"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_fav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/image_here"
+            android:src="@drawable/fav" />
+
+        <TextView
+            android:id="@+id/favourite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/favourite"
+            android:textAppearance="@style/favourite" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
