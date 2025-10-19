@@ -9,20 +9,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.musicplayer.R
 import com.example.musicplayer.adapter.RecentSongsAdapter
+import com.example.musicplayer.common.extensionFunctions.NavigationExtensionF.findNavControllerSafely
+import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.setOnOneClickListener
 import com.example.musicplayer.data.Mp3FilesDataClass
 import com.example.musicplayer.databinding.FragmentHomeBinding
 import com.example.musicplayer.interfaces.PlaySongClickListernerInterface
-import com.example.musicplayer.ui.activities.MainActivity
+import com.example.musicplayer.presentation.activities.MainActivity
 import com.example.musicplayer.ui.activities.PlayMusicActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class HomeFragment : BaseFragment(), PlaySongClickListernerInterface {
+class HomeFragment : Fragment(), PlaySongClickListernerInterface {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var recentAdapter: RecentSongsAdapter
     override fun onCreateView(
@@ -36,25 +40,30 @@ class HomeFragment : BaseFragment(), PlaySongClickListernerInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as MainActivity).binding.bottombar.linearMusic.setOnClickListener {
-            findNavController().navigate(R.id.action_home2_to_myMusic)
-        }
-        (activity as MainActivity).binding.bottombar.linearArtist.setOnClickListener {
-            findNavController().navigate(R.id.action_home2_to_artist)
-        }
-        (activity as MainActivity).binding.bottombar.linearHome.setOnClickListener {
-            findNavController().navigate(R.id.action_home2_self)
-        }
-        (activity as MainActivity).binding.bottombar.linearPlaylist.setOnClickListener {
-            findNavController().navigate(R.id.action_home2_to_playList)
-        }
-        (activity as MainActivity).binding.bottombar.linearFavourite.setOnClickListener {
-            findNavController().navigate(R.id.action_home2_to_favourite)
-        }
-        CoroutineScope(Dispatchers.Default).launch {
+        MainActivity.instance?.showTopBarAndBottomBar()
+        initClickListener()
+        lifecycleScope.launch {
             val filesFetched = (activity as MainActivity).allSongs
             Log.i("test", "${filesFetched.size}")
             setUpRecyclerView(filesFetched)
+        }
+    }
+
+    fun initClickListener() {
+        (activity as MainActivity).binding.linearMusic.setOnOneClickListener {
+            findNavControllerSafely()?.navigate(R.id.myMusicFragment)
+        }
+        (activity as MainActivity).binding.linearArtist.setOnOneClickListener {
+            findNavControllerSafely()?.navigate(R.id.artistFragment)
+        }
+        (activity as MainActivity).binding.linearHome.setOnOneClickListener {
+            findNavControllerSafely()?.navigate(R.id.homeFragment)
+        }
+        (activity as MainActivity).binding.linearPlaylist.setOnOneClickListener {
+            findNavControllerSafely()?.navigate(R.id.playListFragment)
+        }
+        (activity as MainActivity).binding.linearFavourite.setOnOneClickListener {
+            findNavControllerSafely()?.navigate(R.id.favouriteFragment)
         }
     }
 
@@ -62,7 +71,7 @@ class HomeFragment : BaseFragment(), PlaySongClickListernerInterface {
         activity?.let { context ->
             if (context is MainActivity) {
                 recentAdapter = RecentSongsAdapter(
-                    context, mp3Files,this
+                    context, mp3Files, this
                 )
             }
             if (::binding.isInitialized) {
@@ -76,7 +85,7 @@ class HomeFragment : BaseFragment(), PlaySongClickListernerInterface {
     }
 
     override fun PlaySong(Mp3Songs: Mp3FilesDataClass) {
-        Log.i("test","uri->${Mp3Songs.path}")
+        Log.i("test", "uri->${Mp3Songs.path}")
         Intent(context, PlayMusicActivity::class.java).also {
             it.putExtra("image", Mp3Songs.path.toUri())
             startActivity(it)

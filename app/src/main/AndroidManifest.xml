@@ -19,11 +19,9 @@
         <activity
             android:name=".ui.activities.PlayMusicActivity"
             android:exported="false" />
+
         <activity
-            android:name=".ui.activities.MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.activities.SplashActivity"
+            android:name=".presentation.activities.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>

@@ -1,4 +1,4 @@
-package com.example.musicplayer.ui.fragments
+package com.example.musicplayer.presentation.fragments
 
 import android.os.Bundle
 import android.os.Handler
@@ -7,19 +7,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.musicplayer.R
 import com.example.musicplayer.adapter.AllArtistAdapter
+import com.example.musicplayer.common.extensionFunctions.NavigationExtensionF.findNavControllerSafely
+import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.setOnOneClickListener
 import com.example.musicplayer.data.Mp3FilesDataClass
 import com.example.musicplayer.databinding.FragmentArtistBinding
 import com.example.musicplayer.interfaces.BottomMenuClickInterface
-import com.example.musicplayer.ui.activities.MainActivity
+import com.example.musicplayer.presentation.activities.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class ArtistFragment : BaseFragment(), BottomMenuClickInterface {
+class ArtistFragment : Fragment(), BottomMenuClickInterface {
     private lateinit var binding: FragmentArtistBinding
     private lateinit var allArtistAdapter: AllArtistAdapter
     private var allArtists: ArrayList<Mp3FilesDataClass> = arrayListOf()
@@ -32,27 +36,31 @@ class ArtistFragment : BaseFragment(), BottomMenuClickInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).binding.bottombar.linearMusic.setOnClickListener {
-            findNavController().navigate(R.id.action_artist_to_myMusic)
-        }
-        (activity as MainActivity).binding.bottombar.linearArtist.setOnClickListener {
-            findNavController().navigate(R.id.action_artist_self)
-        }
-        (activity as MainActivity).binding.bottombar.linearHome.setOnClickListener {
-            findNavController().navigate(R.id.action_artist_to_home2)
-        }
-        (activity as MainActivity).binding.bottombar.linearPlaylist.setOnClickListener {
-            findNavController().navigate(R.id.action_artist_to_playList)
-        }
-        (activity as MainActivity).binding.bottombar.linearFavourite.setOnClickListener {
-            findNavController().navigate(R.id.action_artist_to_favourite)
-        }
+        initClickListener()
 
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch(IO) {
 
             allArtists = (activity as MainActivity).allSongs
             Log.i("test", "My Music Frag->${allArtists.size} ")
             setUpRecyclerView(allArtists)
+        }
+    }
+
+    fun initClickListener() {
+        (activity as MainActivity).binding.linearMusic.setOnOneClickListener {
+            findNavControllerSafely()?.navigate(R.id.myMusicFragment)
+        }
+        (activity as MainActivity).binding.linearArtist.setOnOneClickListener {
+            findNavControllerSafely()?.navigate(R.id.artistFragment)
+        }
+        (activity as MainActivity).binding.linearHome.setOnOneClickListener {
+            findNavControllerSafely()?.navigate(R.id.homeFragment)
+        }
+        (activity as MainActivity).binding.linearPlaylist.setOnOneClickListener {
+            findNavControllerSafely()?.navigate(R.id.playListFragment)
+        }
+        (activity as MainActivity).binding.linearFavourite.setOnOneClickListener {
+            findNavControllerSafely()?.navigate(R.id.favourite)
         }
     }
 
