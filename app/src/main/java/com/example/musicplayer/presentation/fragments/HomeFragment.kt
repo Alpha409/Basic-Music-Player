@@ -23,6 +23,7 @@ import com.example.musicplayer.presentation.activities.MainActivity
 import com.example.musicplayer.ui.activities.PlayMusicActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 
@@ -42,10 +43,12 @@ class HomeFragment : Fragment(), PlaySongClickListernerInterface {
 
         MainActivity.instance?.showTopBarAndBottomBar()
         initClickListener()
-        lifecycleScope.launch {
-            val filesFetched = (activity as MainActivity).allSongs
-            Log.i("test", "${filesFetched.size}")
-            setUpRecyclerView(filesFetched)
+        lifecycleScope.launch(IO) {
+             (activity as MainActivity).mp3Files.collect {filesFetched ->
+
+                Log.i("test", "${filesFetched.size}")
+                setUpRecyclerView(filesFetched)
+            }
         }
     }
 
@@ -67,7 +70,7 @@ class HomeFragment : Fragment(), PlaySongClickListernerInterface {
         }
     }
 
-    private fun setUpRecyclerView(mp3Files: ArrayList<Mp3FilesDataClass>) {
+    private fun setUpRecyclerView(mp3Files: List<Mp3FilesDataClass>) {
         activity?.let { context ->
             if (context is MainActivity) {
                 recentAdapter = RecentSongsAdapter(

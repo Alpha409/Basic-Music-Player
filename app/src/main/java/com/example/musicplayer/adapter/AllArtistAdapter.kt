@@ -14,7 +14,7 @@ import com.example.musicplayer.data.Mp3FilesDataClass
 import com.example.musicplayer.interfaces.BottomMenuClickInterface
 
 class AllArtistAdapter(
-    private val context: Context, private var Mp3ModelClass: ArrayList<Mp3FilesDataClass>,private val showBottomMenu:BottomMenuClickInterface
+    private val context: Context, private var Mp3ModelClass: List<Mp3FilesDataClass>,private val showBottomMenu:BottomMenuClickInterface
 ) : RecyclerView.Adapter<AllArtistAdapter.AllArtistViewHolder>() {
     class AllArtistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtArtistName: TextView = itemView.findViewById(R.id.txt_artist_name)

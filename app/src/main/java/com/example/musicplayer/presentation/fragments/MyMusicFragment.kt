@@ -20,7 +20,9 @@ import com.example.musicplayer.presentation.activities.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MyMusicFragment : Fragment() {
     private lateinit var binding: FragmentMyMusicBinding
@@ -37,9 +39,14 @@ class MyMusicFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initClickListener()
         lifecycleScope.launch(IO) {
-            val allSongs = (activity as MainActivity).allSongs
-            Log.i("test", "My Music Frag->${allSongs.size} ")
-            setUpRecyclerView(allSongs)
+            (activity as MainActivity).mp3Files.collect {allSongs ->
+
+                Log.i("checkSongs", "My Music Frag->${allSongs.size} ")
+                withContext(Main){
+
+                    setUpRecyclerView(allSongs)
+                }
+            }
         }
     }
 
@@ -62,7 +69,7 @@ class MyMusicFragment : Fragment() {
         }
     }
 
-    private fun setUpRecyclerView(mp3Files: ArrayList<Mp3FilesDataClass>) {
+    private fun setUpRecyclerView(mp3Files: List<Mp3FilesDataClass>) {
         activity?.let { context ->
             if (context is MainActivity) {
                 allSongsAdapter = AllSongsAdapter(

@@ -15,7 +15,7 @@ import com.example.musicplayer.interfaces.PlaySongClickListernerInterface
 
 class RecentSongsAdapter(
     private val context: Context,
-    private var Mp3ModelClass: ArrayList<Mp3FilesDataClass>,
+    private var Mp3ModelClass: List<Mp3FilesDataClass>,
     private val PlaySongs: PlaySongClickListernerInterface
 ) : RecyclerView.Adapter<RecentSongsAdapter.RecentSongsViewHolder>() {
     class RecentSongsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

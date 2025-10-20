@@ -6,30 +6,38 @@ import android.graphics.BitmapFactory
 import android.provider.MediaStore
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.musicplayer.data.Mp3FilesDataClass
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 
-private var mp3Files: ArrayList<Mp3FilesDataClass> = arrayListOf()
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    fun getMp3Files(): ArrayList<Mp3FilesDataClass> {
-        viewModelScope.launch {
-            val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0"
-            val projection = arrayOf(
-                MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.ARTIST,
-                MediaStore.Audio.Media.ALBUM,
-                MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.ALBUM_ID
-            )
-            val sortOrder = "${MediaStore.Audio.Media.TITLE} ASC"
-            val cursor = getApplication<Application>().contentResolver.query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, null, sortOrder
-            )
-            cursor?.let { cursor ->
+    fun getMp3Files(): Flow<List<Mp3FilesDataClass>> = flow {
+        val mp3List = mutableListOf<Mp3FilesDataClass>()
+        val resolver = getApplication<Application>().contentResolver
+
+        val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0"
+        val projection = arrayOf(
+            MediaStore.Audio.Media._ID,
+            MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.ARTIST,
+            MediaStore.Audio.Media.ALBUM,
+            MediaStore.Audio.Media.DURATION,
+            MediaStore.Audio.Media.DATA,
+            MediaStore.Audio.Media.ALBUM_ID
+        )
+        val sortOrder = "${MediaStore.Audio.Media.TITLE} ASC"
+
+        withContext(Dispatchers.IO) {
+            resolver.query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                selection,
+                null,
+                sortOrder
+            )?.use { cursor ->
                 val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
                 val titleColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
                 val artistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
@@ -37,7 +45,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 val durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
                 val pathColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
                 val albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
-                val albumArtColumn = arrayOf(MediaStore.Audio.Albums.ALBUM_ART)
+
+                val albumArtProjection = arrayOf(MediaStore.Audio.Albums.ALBUM_ART)
+
                 while (cursor.moveToNext()) {
                     val id = cursor.getLong(idColumn)
                     val title = cursor.getString(titleColumn)
@@ -46,28 +56,40 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     val duration = cursor.getLong(durationColumn)
                     val path = cursor.getString(pathColumn)
                     val albumId = cursor.getLong(albumIdColumn)
-                    val albumArtCursor = getApplication<Application>().contentResolver.query(
+
+                    var albumArt: Bitmap? = null
+                    resolver.query(
                         MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-                        albumArtColumn,
-                        MediaStore.Audio.Albums._ID + " = ?",
+                        albumArtProjection,
+                        "${MediaStore.Audio.Albums._ID}=?",
                         arrayOf(albumId.toString()),
                         null
-                    )
-                    var albumArt: Bitmap? = null
-                    if (albumArtCursor?.moveToFirst() == true) {
-                        val albumArtPath =
-                            albumArtCursor.getString(albumArtCursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART))
-                        albumArt = BitmapFactory.decodeFile(albumArtPath)
+                    )?.use { albumCursor ->
+                        if (albumCursor.moveToFirst()) {
+                            val albumArtPath = albumCursor.getString(
+                                albumCursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART)
+                            )
+                            albumArt = BitmapFactory.decodeFile(albumArtPath)
+                        }
                     }
-                    albumArtCursor?.close()
-                    val mp3File =
-                        Mp3FilesDataClass(id, title, artist, album, duration, path, albumArt)
-                    mp3Files.add(mp3File)
+
+                    mp3List.add(
+                        Mp3FilesDataClass(
+                            id = id,
+                            title = title,
+                            artist = artist,
+                            album = album,
+                            duration = duration,
+                            path = path,
+                            albumArt = albumArt
+                        )
+                    )
                 }
             }
-            cursor?.close()
-            Log.i("test", "size of item gotten-> ${mp3Files.size}")
         }
-        return mp3Files
+
+        Log.i("Mp3Loader", "Loaded ${mp3List.size} mp3 files")
+        emit(mp3List)
     }
+
 }

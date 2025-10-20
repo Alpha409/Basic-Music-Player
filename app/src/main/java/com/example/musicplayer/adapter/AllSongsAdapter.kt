@@ -12,7 +12,7 @@ import com.example.musicplayer.R
 import com.example.musicplayer.data.Mp3FilesDataClass
 
 class AllSongsAdapter(
-    private val context: Context, private var Mp3ModelClass: ArrayList<Mp3FilesDataClass>
+    private val context: Context, private var Mp3ModelClass: List<Mp3FilesDataClass>
 ) : RecyclerView.Adapter<AllSongsAdapter.AllSongsViewHolder>() {
     class AllSongsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtSongName: TextView = itemView.findViewById(R.id.txt_song_name)

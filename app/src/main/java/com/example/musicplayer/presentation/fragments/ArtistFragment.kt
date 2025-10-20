@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 class ArtistFragment : Fragment(), BottomMenuClickInterface {
     private lateinit var binding: FragmentArtistBinding
     private lateinit var allArtistAdapter: AllArtistAdapter
-    private var allArtists: ArrayList<Mp3FilesDataClass> = arrayListOf()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -40,9 +40,11 @@ class ArtistFragment : Fragment(), BottomMenuClickInterface {
 
         lifecycleScope.launch(IO) {
 
-            allArtists = (activity as MainActivity).allSongs
-            Log.i("test", "My Music Frag->${allArtists.size} ")
-            setUpRecyclerView(allArtists)
+             (activity as MainActivity).mp3Files.collect { allArtists ->
+
+                 Log.i("test", "My Music Frag->${allArtists.size} ")
+                 setUpRecyclerView(allArtists)
+             }
         }
     }
 
@@ -64,7 +66,7 @@ class ArtistFragment : Fragment(), BottomMenuClickInterface {
         }
     }
 
-    private fun setUpRecyclerView(mp3Files: ArrayList<Mp3FilesDataClass>) {
+    private fun setUpRecyclerView(mp3Files: List<Mp3FilesDataClass>) {
         activity?.let { context ->
             if (context is MainActivity) {
                 allArtistAdapter = AllArtistAdapter(
