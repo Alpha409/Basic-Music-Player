@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -25,21 +26,26 @@ import com.example.musicplayer.R
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.hide
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.setOnOneClickListener
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.show
-import com.example.musicplayer.data.Mp3FilesDataClass
+import com.example.musicplayer.domain.models.Mp3FilesDataClass
 import com.example.musicplayer.databinding.ActivityMainBinding
 import com.example.musicplayer.viewModel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.Flow
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
 
-    private lateinit var myViewModel: MainViewModel
+
+    private val myViewModel: MainViewModel by viewModels()
     private lateinit var navController: NavController
     private val _mp3Files = MutableStateFlow<List<Mp3FilesDataClass>>(emptyList())
     val mp3Files: StateFlow<List<Mp3FilesDataClass>> = _mp3Files.asStateFlow()
@@ -79,14 +85,14 @@ class MainActivity : AppCompatActivity() {
      * Initializes ViewModel and loads songs.
      */
     private fun setupViewModel() {
-        myViewModel = ViewModelProvider(this)[MainViewModel::class.java]
+
         loadSongs()
     }
 
     private fun loadSongs() {
         lifecycleScope.launch(IO) {
 
-            myViewModel.getMp3Files().collect {
+            myViewModel.getLocalMp3Files().collect {
                 Log.d("checkSongs", "loadSongs:$it ")
                 _mp3Files.value=it
             }

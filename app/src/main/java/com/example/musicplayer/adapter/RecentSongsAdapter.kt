@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicplayer.R
-import com.example.musicplayer.data.Mp3FilesDataClass
+import com.example.musicplayer.domain.models.Mp3FilesDataClass
 import com.example.musicplayer.interfaces.PlaySongClickListernerInterface
 
 class RecentSongsAdapter(
@@ -37,7 +37,7 @@ class RecentSongsAdapter(
 
     override fun onBindViewHolder(holder: RecentSongsViewHolder, position: Int) {
         val maxLength = 10
-        val truncatedTitle = Mp3ModelClass[position].title.substring(0, maxLength)
+        val truncatedTitle = Mp3ModelClass[position].title.take(maxLength)
         Glide.with(context).asBitmap().load(Mp3ModelClass[position].albumArt)
             .placeholder(R.drawable.playingnow).into(holder.coverImage)
         holder.txtSongName.text = truncatedTitle

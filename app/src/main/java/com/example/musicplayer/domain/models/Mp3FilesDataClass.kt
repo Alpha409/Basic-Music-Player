@@ -1,4 +1,4 @@
-package com.example.musicplayer.data
+package com.example.musicplayer.domain.models
 
 import android.graphics.Bitmap
 

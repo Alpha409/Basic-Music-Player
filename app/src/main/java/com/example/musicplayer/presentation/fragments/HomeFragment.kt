@@ -16,11 +16,11 @@ import com.example.musicplayer.R
 import com.example.musicplayer.adapter.RecentSongsAdapter
 import com.example.musicplayer.common.extensionFunctions.NavigationExtensionF.findNavControllerSafely
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.setOnOneClickListener
-import com.example.musicplayer.data.Mp3FilesDataClass
+import com.example.musicplayer.common.utils.Utils
+import com.example.musicplayer.domain.models.Mp3FilesDataClass
 import com.example.musicplayer.databinding.FragmentHomeBinding
 import com.example.musicplayer.interfaces.PlaySongClickListernerInterface
 import com.example.musicplayer.presentation.activities.MainActivity
-import com.example.musicplayer.ui.activities.PlayMusicActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
@@ -30,6 +30,8 @@ import kotlinx.coroutines.launch
 class HomeFragment : Fragment(), PlaySongClickListernerInterface {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var recentAdapter: RecentSongsAdapter
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -44,12 +46,14 @@ class HomeFragment : Fragment(), PlaySongClickListernerInterface {
         MainActivity.instance?.showTopBarAndBottomBar()
         initClickListener()
         lifecycleScope.launch(IO) {
-             (activity as MainActivity).mp3Files.collect {filesFetched ->
+            (activity as MainActivity).mp3Files.collect { filesFetched ->
 
                 Log.i("test", "${filesFetched.size}")
                 setUpRecyclerView(filesFetched)
             }
         }
+
+        setHomePlayerUI()
     }
 
     fun initClickListener() {
@@ -87,11 +91,21 @@ class HomeFragment : Fragment(), PlaySongClickListernerInterface {
         }
     }
 
+    fun setHomePlayerUI() {
+        if (Utils.getPlayer()?.isPlaying == true) {
+            binding.txtSongName.text = Utils.getPlayer()?.mediaMetadata?.title
+            binding.txtArtistName.text = Utils.getPlayer()?.mediaMetadata?.artist
+        }
+    }
+
     override fun PlaySong(Mp3Songs: Mp3FilesDataClass) {
         Log.i("test", "uri->${Mp3Songs.path}")
-        Intent(context, PlayMusicActivity::class.java).also {
-            it.putExtra("image", Mp3Songs.path.toUri())
-            startActivity(it)
+        activity?.let { fragmentActivity ->
+            Utils.initPlayer(fragmentActivity)
+            Utils.playMedia(fragmentActivity, Mp3Songs.path.toUri())
+            setHomePlayerUI()
         }
+
+
     }
 }

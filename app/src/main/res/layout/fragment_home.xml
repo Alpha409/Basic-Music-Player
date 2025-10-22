@@ -95,26 +95,26 @@
                 app:layout_constraintTop_toBottomOf="@id/txt_artist_name" />
 
             <TextView
-                android:id="@+id/txt_start_song"
+                android:id="@+id/txtCurrentTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_25sdp"
                 android:text="@string/start_song"
                 android:textAppearance="@style/start_song"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/txt_end_song"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/txtTotalTime"
                 app:layout_constraintTop_toBottomOf="@id/now_playing_progress" />
 
             <TextView
-                android:id="@+id/txt_end_song"
+                android:id="@+id/txtTotalTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_25sdp"
                 android:text="@string/end_song"
                 android:textAppearance="@style/end_song"
-                app:layout_constraintLeft_toRightOf="@+id/txt_start_song"
-                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/txtCurrentTime"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/now_playing_progress" />
 
             <ImageView

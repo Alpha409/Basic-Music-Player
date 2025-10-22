@@ -13,7 +13,7 @@ import com.example.musicplayer.R
 import com.example.musicplayer.adapter.AllArtistAdapter
 import com.example.musicplayer.common.extensionFunctions.NavigationExtensionF.findNavControllerSafely
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.setOnOneClickListener
-import com.example.musicplayer.data.Mp3FilesDataClass
+import com.example.musicplayer.domain.models.Mp3FilesDataClass
 import com.example.musicplayer.databinding.FragmentArtistBinding
 import com.example.musicplayer.interfaces.BottomMenuClickInterface
 import com.example.musicplayer.presentation.activities.MainActivity
