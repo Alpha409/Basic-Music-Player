@@ -1,6 +1,6 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_layout"
+    android:id="@+id/mainLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/_10sdp"
@@ -19,7 +19,7 @@
             app:cardCornerRadius="@dimen/_10sdp">
 
             <ImageView
-                android:id="@+id/cover"
+                android:id="@+id/coverImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/music"

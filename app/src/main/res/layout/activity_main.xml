@@ -61,33 +61,30 @@
         app:navGraph="@navigation/my_nav" />
 
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clBottomMusicPlayer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_4sdp"
         android:background="@drawable/bg_rectangle_round"
         android:paddingVertical="@dimen/_8sdp"
-        android:layout_marginBottom="@dimen/_4sdp"
-        android:layout_marginHorizontal="@dimen/_12sdp"
         app:layout_constraintBottom_toTopOf="@+id/clBottomNav"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        >
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/txtSongName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="@dimen/_6sdp"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="@dimen/_8sdp"
-            app:layout_constraintEnd_toStartOf="@+id/btnPlayPause"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:text="Song Name"
             android:textColor="@color/white"
-            />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnPlayPause"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/btnPlayPause"
@@ -95,24 +92,26 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/_8sdp"
-            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/image_here"
+            android:src="@drawable/play"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnFav"
-            android:contentDescription="@string/image_here"
-            android:src="@drawable/play" />
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/btnFav"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/_8sdp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:contentDescription="@string/image_here"
-            android:src="@drawable/heartfilled" />
+            android:src="@drawable/heartfilled"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clBottomNav"
         android:layout_width="match_parent"
@@ -138,7 +137,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/image_here"
-                android:src="@drawable/music" />
+                android:src="@drawable/music"
+                app:tint="#6F7084" />
 
             <TextView
                 android:id="@+id/my_music"

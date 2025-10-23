@@ -4,6 +4,7 @@ package com.example.musicplayer.presentation.activities
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -23,6 +24,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.musicplayer.R
+import com.example.musicplayer.common.extensionFunctions.NavigationExtensionF.findNavControllerSafely
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.hide
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.setOnOneClickListener
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.show
@@ -73,6 +75,46 @@ class MainActivity : AppCompatActivity() {
         setupNavigation()
         setupMenuButton()
         requestStoragePermissionsIfNeeded()
+        initClickListener()
+    }
+
+    fun initClickListener(){
+        binding.linearMusic.setOnOneClickListener {
+            binding.ivMusic.imageTintList = ColorStateList.valueOf(getColor(R.color.itemSelected))
+            binding.ivArtist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivPlaylist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivFav.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+
+            navController.navigate(R.id.myMusicFragment)
+        }
+        binding.linearArtist.setOnOneClickListener {
+            binding.ivMusic.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivArtist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemSelected))
+            binding.ivPlaylist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivFav.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            navController.navigate(R.id.artistFragment)
+        }
+        binding.linearHome.setOnOneClickListener {
+            binding.ivMusic.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivArtist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivPlaylist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivFav.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            navController.navigate(R.id.homeFragment)
+        }
+        binding.linearPlaylist.setOnOneClickListener {
+            binding.ivMusic.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivArtist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivPlaylist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemSelected))
+            binding.ivFav.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            navController.navigate(R.id.playListFragment)
+        }
+        binding.linearFavourite.setOnOneClickListener {
+            binding.ivMusic.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivArtist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivPlaylist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivFav.imageTintList = ColorStateList.valueOf(getColor(R.color.itemSelected))
+            navController.navigate(R.id.favouriteFragment)
+        }
     }
     /**
      * Hides the ActionBar for fullscreen experience.
@@ -166,9 +208,21 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
+    fun setupBottomMusicPlayer( mp3Songs: Mp3FilesDataClass){
+
+    }
     fun hideTopBarAndBottomBar() {
         binding.groupTopBar.hide()
         binding.clBottomNav.hide()
+    }
+
+    fun showBottomPlayer(){
+        binding.clBottomMusicPlayer.show()
+    }
+    fun hideBottomPlayer(){
+        binding.clBottomMusicPlayer.hide()
     }
     fun showTopBarAndBottomBar() {
         binding.groupTopBar.show()

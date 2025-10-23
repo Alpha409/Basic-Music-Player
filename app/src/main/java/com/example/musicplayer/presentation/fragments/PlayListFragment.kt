@@ -23,7 +23,7 @@ class PlayListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initClickListener()
+//        initClickListener()
     }
 
     fun initClickListener() {

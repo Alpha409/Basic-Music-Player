@@ -37,7 +37,7 @@ class MyMusicFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initClickListener()
+//        initClickListener()
         lifecycleScope.launch(IO) {
             (activity as MainActivity).mp3Files.collect {allSongs ->
 

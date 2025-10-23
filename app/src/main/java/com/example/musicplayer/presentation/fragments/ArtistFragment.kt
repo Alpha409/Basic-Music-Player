@@ -36,7 +36,7 @@ class ArtistFragment : Fragment(), BottomMenuClickInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initClickListener()
+//        initClickListener()
 
         lifecycleScope.launch(IO) {
 

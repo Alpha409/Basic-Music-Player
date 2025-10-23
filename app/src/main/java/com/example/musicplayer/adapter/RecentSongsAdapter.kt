@@ -2,48 +2,59 @@ package com.example.musicplayer.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicplayer.R
+import com.example.musicplayer.databinding.RecyclerViewRecentItemBinding
 import com.example.musicplayer.domain.models.Mp3FilesDataClass
-import com.example.musicplayer.interfaces.PlaySongClickListernerInterface
 
-class RecentSongsAdapter(
-    private val context: Context,
-    private var Mp3ModelClass: List<Mp3FilesDataClass>,
-    private val PlaySongs: PlaySongClickListernerInterface
-) : RecyclerView.Adapter<RecentSongsAdapter.RecentSongsViewHolder>() {
-    class RecentSongsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txtSongName: TextView = itemView.findViewById(R.id.txt_song_name)
-        val txtArtistName: TextView = itemView.findViewById(R.id.txt_artist_name)
-        val coverImage: ImageView = itemView.findViewById(R.id.cover)
-        val playRecentSong: LinearLayout = itemView.findViewById(R.id.linear_play_recent)
-    }
+class RecentSongsAdapter() : RecyclerView.Adapter<RecentSongsAdapter.RecentSongsViewHolder>() {
+
+    var clickListener: PlaySongClickListenerInterface? = null
+    var musicList: MutableList<Mp3FilesDataClass> = mutableListOf()
+
+
+
+    class RecentSongsViewHolder(var binding: RecyclerViewRecentItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentSongsViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.recycler_view_recent_item, parent, false)
-        return RecentSongsViewHolder(view)
+        val binding = RecyclerViewRecentItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return RecentSongsViewHolder(binding)
     }
 
+
     override fun getItemCount(): Int {
-        return Mp3ModelClass.size
+        return musicList.size
+    }
+
+    fun setData(songList:List<Mp3FilesDataClass>){
+        musicList.clear()
+        musicList.addAll(songList)
+        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: RecentSongsViewHolder, position: Int) {
         val maxLength = 10
-        val truncatedTitle = Mp3ModelClass[position].title.take(maxLength)
-        Glide.with(context).asBitmap().load(Mp3ModelClass[position].albumArt)
-            .placeholder(R.drawable.playingnow).into(holder.coverImage)
-        holder.txtSongName.text = truncatedTitle
-        holder.txtArtistName.text = Mp3ModelClass[position].artist
-        holder.playRecentSong.setOnClickListener {
-            PlaySongs.PlaySong(Mp3ModelClass[position])
+        val context= holder.binding.root.context
+        val truncatedTitle = musicList[position].title.take(maxLength)
+        holder.binding.apply {
+
+            Glide.with(context).asBitmap().load(musicList[position].albumArt)
+                .placeholder(R.drawable.playingnow).into(coverImage)
+            txtSongName.text = truncatedTitle
+            txtArtistName.text = musicList[position].artist
+            mainLayout.setOnClickListener {
+                clickListener?.playSong(musicList[position])
+            }
         }
+    }
+
+    interface PlaySongClickListenerInterface {
+        fun playSong(songModel: Mp3FilesDataClass)
     }
 }
