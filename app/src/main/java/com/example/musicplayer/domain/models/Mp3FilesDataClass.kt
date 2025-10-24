@@ -9,5 +9,6 @@ data class Mp3FilesDataClass(
     val album: String?,
     val duration: Long,
     val path: String,
-    val albumArt: Bitmap?
+    val albumArt: Bitmap?,
+    var isFav: Boolean = false
 )

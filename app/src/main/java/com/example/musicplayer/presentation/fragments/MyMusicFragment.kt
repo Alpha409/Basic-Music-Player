@@ -12,6 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.musicplayer.R
 import com.example.musicplayer.adapter.AllSongsAdapter
+import com.example.musicplayer.common.extensionFunctions.LoadingDialog
+import com.example.musicplayer.common.extensionFunctions.LoadingDialog.showLoadingDialog
 import com.example.musicplayer.common.extensionFunctions.NavigationExtensionF.findNavControllerSafely
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.setOnOneClickListener
 import com.example.musicplayer.domain.models.Mp3FilesDataClass
@@ -38,12 +40,14 @@ class MyMusicFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 //        initClickListener()
+
+        activity?.showLoadingDialog()
         lifecycleScope.launch(IO) {
-            (activity as MainActivity).mp3Files.collect {allSongs ->
+            (activity as MainActivity).mp3Files.collect { allSongs ->
 
                 Log.i("checkSongs", "My Music Frag->${allSongs.size} ")
-                withContext(Main){
-
+                withContext(Main) {
+                    LoadingDialog.hideLoadingDialog()
                     setUpRecyclerView(allSongs)
                 }
             }

@@ -9,34 +9,46 @@ import androidx.fragment.app.Fragment
 import com.example.musicplayer.R
 
 object LoadingDialog {
+    // Holds the current visible loading dialog instance
+    private var currentLoadingDialog: AlertDialog? = null
+
     /**
      * Shows a loading dialog with an optional message.
      *
      * @param message Text to display under the loader (default: "Loading...")
-     * @return The created [AlertDialog] instance so it can be dismissed later.
      */
     @SuppressLint("MissingInflatedId")
-    fun Activity.showLoadingDialog(message: String = "Loading..."): AlertDialog {
+    fun Activity.showLoadingDialog(message: String = "Loading...") {
+        hideLoadingDialog() // ensure only one dialog is active
+
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_loading, null)
         dialogView.findViewById<TextView>(R.id.loadingMessage)?.text = message
 
-        val dialog = AlertDialog.Builder(this)
+        currentLoadingDialog = AlertDialog.Builder(this)
             .setView(dialogView)
             .setCancelable(false)
             .create()
-        dialog.show()
-        return dialog
+
+        currentLoadingDialog?.show()
     }
 
     /**
      * Fragment variant for showing a loading dialog.
      */
-    fun Fragment.showLoadingDialog(message: String = "Loading..."): AlertDialog? {
-        return activity?.showLoadingDialog(message)
+    fun Fragment.showLoadingDialog(message: String = "Loading...") {
+        activity?.showLoadingDialog(message)
     }
 
     /**
-     * Dismiss the loading dialog safely.
+     * Safely dismiss the current loading dialog.
+     */
+    fun hideLoadingDialog() {
+        currentLoadingDialog?.dismissSafely()
+        currentLoadingDialog = null
+    }
+
+    /**
+     * Safely dismiss the dialog instance if showing.
      */
     fun AlertDialog.dismissSafely() {
         if (isShowing) dismiss()

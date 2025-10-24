@@ -71,21 +71,9 @@
                 android:layout_gravity="center"
                 android:layout_marginEnd="@dimen/_5sdp"
                 android:contentDescription="@string/music"
-                android:src="@drawable/heartfilled"
+                android:src="@drawable/heart_empty"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/menu_two_dot"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/menu_two_dot"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/_5sdp"
-                android:contentDescription="@string/music"
-                android:src="@drawable/_dotmenu"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
     </LinearLayout>

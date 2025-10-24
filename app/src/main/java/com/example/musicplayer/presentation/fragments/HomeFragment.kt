@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.musicplayer.R
 import com.example.musicplayer.adapter.RecentSongsAdapter
+import com.example.musicplayer.common.extensionFunctions.LoadingDialog
+import com.example.musicplayer.common.extensionFunctions.LoadingDialog.showLoadingDialog
 import com.example.musicplayer.common.extensionFunctions.NavigationExtensionF.findNavControllerSafely
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.setOnOneClickListener
 import com.example.musicplayer.common.utils.Utils
@@ -43,9 +45,11 @@ class HomeFragment : Fragment(), RecentSongsAdapter.PlaySongClickListenerInterfa
 
         MainActivity.instance?.showTopBarAndBottomBar()
 //        initClickListener()
+
+        activity?.showLoadingDialog()
         lifecycleScope.launch(IO) {
             (activity as MainActivity).mp3Files.collect { filesFetched ->
-
+                LoadingDialog.hideLoadingDialog()
                 Log.i("test", "${filesFetched.size}")
                 mp3Files.addAll(filesFetched)
 
