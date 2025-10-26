@@ -23,24 +23,8 @@ class PlayListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        initClickListener()
+
     }
 
-    fun initClickListener() {
-        (activity as MainActivity).binding.linearMusic.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.myMusicFragment)
-        }
-        (activity as MainActivity).binding.linearArtist.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.artistFragment)
-        }
-        (activity as MainActivity).binding.linearHome.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.homeFragment)
-        }
-        (activity as MainActivity).binding.linearPlaylist.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.playListFragment)
-        }
-        (activity as MainActivity).binding.linearFavourite.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.favouriteFragment)
-        }
-    }
+
 }

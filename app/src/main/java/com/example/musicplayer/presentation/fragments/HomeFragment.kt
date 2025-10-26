@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.musicplayer.R
 import com.example.musicplayer.adapter.RecentSongsAdapter
@@ -21,8 +22,10 @@ import com.example.musicplayer.common.utils.Utils
 import com.example.musicplayer.databinding.FragmentHomeBinding
 import com.example.musicplayer.domain.models.Mp3FilesDataClass
 import com.example.musicplayer.presentation.activities.MainActivity
+import com.example.musicplayer.viewModel.MainViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import kotlin.getValue
 
 
 class HomeFragment : Fragment(), RecentSongsAdapter.PlaySongClickListenerInterface {
@@ -30,7 +33,7 @@ class HomeFragment : Fragment(), RecentSongsAdapter.PlaySongClickListenerInterfa
     private val recentAdapter: RecentSongsAdapter by lazy {
         RecentSongsAdapter()
     }
-
+    private val mainViewModel: MainViewModel by activityViewModels()
     private var mp3Files: MutableList<Mp3FilesDataClass> = mutableListOf()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -44,11 +47,10 @@ class HomeFragment : Fragment(), RecentSongsAdapter.PlaySongClickListenerInterfa
         super.onViewCreated(view, savedInstanceState)
 
         MainActivity.instance?.showTopBarAndBottomBar()
-//        initClickListener()
 
         activity?.showLoadingDialog()
         lifecycleScope.launch(IO) {
-            (activity as MainActivity).mp3Files.collect { filesFetched ->
+            mainViewModel.mp3Files.collect { filesFetched ->
                 LoadingDialog.hideLoadingDialog()
                 Log.i("test", "${filesFetched.size}")
                 mp3Files.addAll(filesFetched)
@@ -60,65 +62,6 @@ class HomeFragment : Fragment(), RecentSongsAdapter.PlaySongClickListenerInterfa
         setHomePlayerUI()
     }
 
-    fun initClickListener() {
-        (activity as MainActivity).apply {
-            binding.linearMusic.setOnOneClickListener {
-                binding.ivMusic.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemSelected))
-                binding.ivArtist.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                binding.ivPlaylist.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                binding.ivFav.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-
-                findNavControllerSafely()?.navigate(R.id.myMusicFragment)
-            }
-            binding.linearArtist.setOnOneClickListener {
-                binding.ivMusic.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                binding.ivArtist.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemSelected))
-                binding.ivPlaylist.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                binding.ivFav.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                findNavControllerSafely()?.navigate(R.id.artistFragment)
-            }
-            binding.linearHome.setOnOneClickListener {
-                binding.ivMusic.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                binding.ivArtist.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                binding.ivPlaylist.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                binding.ivFav.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                findNavControllerSafely()?.navigate(R.id.homeFragment)
-            }
-            binding.linearPlaylist.setOnOneClickListener {
-                binding.ivMusic.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                binding.ivArtist.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                binding.ivPlaylist.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemSelected))
-                binding.ivFav.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                findNavControllerSafely()?.navigate(R.id.playListFragment)
-            }
-            binding.linearFavourite.setOnOneClickListener {
-                binding.ivMusic.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                binding.ivArtist.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                binding.ivPlaylist.imageTintList =
-                    ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-                binding.ivFav.imageTintList = ColorStateList.valueOf(getColor(R.color.itemSelected))
-                findNavControllerSafely()?.navigate(R.id.favouriteFragment)
-            }
-        }
-    }
 
     private fun setUpRecyclerView() {
         activity?.let { context ->

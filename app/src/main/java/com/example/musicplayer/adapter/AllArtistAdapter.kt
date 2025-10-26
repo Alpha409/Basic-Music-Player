@@ -37,7 +37,7 @@ class AllArtistAdapter(
         holder.bottomMenu.setOnClickListener {
             showBottomMenu.showBottomMenu(Mp3ModelClass[position])
         }
-        Glide.with(context).asBitmap().load(Mp3ModelClass[position].albumArt)
+        Glide.with(context).asBitmap().load(Mp3ModelClass[position].path)
             .placeholder(R.drawable.playingnow).into(holder.songImage)
         holder.txtArtistName.text = Mp3ModelClass[position].artist
         holder.txtArtistSongs.text = Mp3ModelClass[position].artist

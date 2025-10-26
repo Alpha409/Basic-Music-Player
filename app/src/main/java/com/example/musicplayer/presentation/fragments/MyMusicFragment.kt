@@ -1,4 +1,4 @@
-package com.example.musicplayer.ui.fragments
+package com.example.musicplayer.presentation.fragments
 
 import android.os.Bundle
 import android.os.Handler
@@ -7,29 +7,32 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import com.example.musicplayer.R
 import com.example.musicplayer.adapter.AllSongsAdapter
 import com.example.musicplayer.common.extensionFunctions.LoadingDialog
 import com.example.musicplayer.common.extensionFunctions.LoadingDialog.showLoadingDialog
-import com.example.musicplayer.common.extensionFunctions.NavigationExtensionF.findNavControllerSafely
-import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.setOnOneClickListener
 import com.example.musicplayer.domain.models.Mp3FilesDataClass
 import com.example.musicplayer.databinding.FragmentMyMusicBinding
 import com.example.musicplayer.presentation.activities.MainActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.example.musicplayer.viewModel.MainViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.getValue
 
-class MyMusicFragment : Fragment() {
+class MyMusicFragment : Fragment(), AllSongsAdapter.AllSongsClickListener {
     private lateinit var binding: FragmentMyMusicBinding
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val allSongsAdapter: AllSongsAdapter by lazy {
+        AllSongsAdapter()
+    }
 
-    private lateinit var allSongsAdapter: AllSongsAdapter
+
+    var favSongList: MutableList<Mp3FilesDataClass> = mutableListOf()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -39,11 +42,9 @@ class MyMusicFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        initClickListener()
-
         activity?.showLoadingDialog()
         lifecycleScope.launch(IO) {
-            (activity as MainActivity).mp3Files.collect { allSongs ->
+            mainViewModel.mp3Files.collect { allSongs ->
 
                 Log.i("checkSongs", "My Music Frag->${allSongs.size} ")
                 withContext(Main) {
@@ -52,40 +53,50 @@ class MyMusicFragment : Fragment() {
                 }
             }
         }
+        lifecycleScope.launch(IO) {
+            mainViewModel.favList.collect { favSongs ->
+                favSongList.addAll(favSongs)
+
+            }
+
+        }
     }
 
-
-    fun initClickListener() {
-        (activity as MainActivity).binding.linearMusic.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.myMusicFragment)
-        }
-        (activity as MainActivity).binding.linearArtist.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.artistFragment)
-        }
-        (activity as MainActivity).binding.linearHome.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.homeFragment)
-        }
-        (activity as MainActivity).binding.linearPlaylist.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.playListFragment)
-        }
-        (activity as MainActivity).binding.linearFavourite.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.favouriteFragment)
-        }
-    }
 
     private fun setUpRecyclerView(mp3Files: List<Mp3FilesDataClass>) {
-        activity?.let { context ->
-            if (context is MainActivity) {
-                allSongsAdapter = AllSongsAdapter(
-                    context, mp3Files
-                )
-            }
-            if (::binding.isInitialized) {
-                binding.recyclerMyMusic.apply {
-                    setHasFixedSize(true)
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.post { adapter = allSongsAdapter }
+        binding.recyclerMyMusic.adapter = allSongsAdapter
+        allSongsAdapter.allSongsClick = this
 
+        // Convert favorite song IDs to a Set for O(1) lookup
+        val favIds = favSongList.map { it.id }.toSet()
+
+        // Mark favorites efficiently
+        mp3Files.forEach { song ->
+            song.isFav = favIds.contains(song.id)
+        }
+
+        allSongsAdapter.setAllSongsData(mp3Files)
+    }
+
+
+    override fun onFavClick(favSong: Mp3FilesDataClass, position: Int) {
+        lifecycleScope.launch(IO) {
+            if (favSong.isFav) {
+                mainViewModel.removeFav(favSong)
+                withContext(Main) {
+                    allSongsAdapter.notifyItemChanged(position)
+                    Toast.makeText(
+                        activity, "Song removed from favorites successfully", Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else {
+
+                mainViewModel.insertFav(favSong)
+                withContext(Main) {
+                    allSongsAdapter.notifyItemChanged(position)
+                    Toast.makeText(
+                        activity, "Song added to favorites successfully", Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

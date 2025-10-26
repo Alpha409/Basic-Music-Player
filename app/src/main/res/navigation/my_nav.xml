@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/myMusicFragment"
-        android:name="com.example.musicplayer.ui.fragments.MyMusicFragment"
+        android:name="com.example.musicplayer.presentation.fragments.MyMusicFragment"
         android:label="fragment_my_music"
         tools:layout="@layout/fragment_my_music" >
 

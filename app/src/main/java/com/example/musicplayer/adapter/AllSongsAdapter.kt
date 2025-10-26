@@ -9,33 +9,74 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicplayer.R
+import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.setOnOneClickListener
+import com.example.musicplayer.databinding.RecyclerViewAllSongsItemBinding
 import com.example.musicplayer.domain.models.Mp3FilesDataClass
 
 class AllSongsAdapter(
-    private val context: Context, private var Mp3ModelClass: List<Mp3FilesDataClass>
+
 ) : RecyclerView.Adapter<AllSongsAdapter.AllSongsViewHolder>() {
-    class AllSongsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txtSongName: TextView = itemView.findViewById(R.id.txt_song_name)
-        val txtArtistName: TextView = itemView.findViewById(R.id.txt_artist_name)
-        val songImage: ImageView = itemView.findViewById(R.id.iv_song_image)
-    }
+
+    private var allSongs: MutableList<Mp3FilesDataClass> = mutableListOf()
+    var allSongsClick: AllSongsClickListener? = null
+
+    inner class AllSongsViewHolder(val binding: RecyclerViewAllSongsItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllSongsViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.recycler_view_all_songs_item, parent, false)
-        return AllSongsViewHolder(view)
+        val binding = RecyclerViewAllSongsItemBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return AllSongsViewHolder(binding)
     }
 
+
     override fun getItemCount(): Int {
-        return Mp3ModelClass.size
+        return allSongs.size
     }
 
     override fun onBindViewHolder(holder: AllSongsViewHolder, position: Int) {
-//        val maxLength = 20
-//        val truncatedTitle = Mp3ModelClass[position].title.substring(0, maxLength)
-        Glide.with(context).asBitmap().load(Mp3ModelClass[position].albumArt)
-            .placeholder(R.drawable.playingnow).into(holder.songImage)
-        holder.txtSongName.text = Mp3ModelClass[position].title
-        holder.txtArtistName.text = Mp3ModelClass[position].artist
+        val context = holder.binding.root.context
+        holder.binding.apply {
+            Glide.with(context).asBitmap().load(allSongs[position].path)
+                .placeholder(R.drawable.playingnow).into(this.ivSongImage)
+            this.txtSongName.text = allSongs[position].title
+            this.txtArtistName.text = allSongs[position].artist
+
+            val drawableRes = if (allSongs[position].isFav) {
+                R.drawable.heartfilled
+            } else {
+                R.drawable.heart_empty
+            }
+            this.ivFav.setImageResource(drawableRes)
+            this.ivFav.setOnOneClickListener {
+                val song = allSongs[position]
+
+                // Toggle the favorite state
+                song.isFav = !song.isFav
+
+                // Update the icon
+                val drawableRes = if (song.isFav) {
+                    R.drawable.heartfilled
+                } else {
+                    R.drawable.heart_empty
+                }
+                this.ivFav.setImageResource(drawableRes)
+
+                // Notify callback
+                allSongsClick?.onFavClick(song, position)
+            }
+
+        }
+    }
+
+    fun setAllSongsData(allList: List<Mp3FilesDataClass>) {
+        allSongs.clear()
+        allSongs.addAll(allList)
+        notifyDataSetChanged()
+    }
+
+    interface AllSongsClickListener {
+        fun onFavClick(favSong: Mp3FilesDataClass, position: Int)
     }
 }

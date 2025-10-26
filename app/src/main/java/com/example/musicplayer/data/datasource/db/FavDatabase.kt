@@ -1,12 +1,14 @@
 package com.example.musicplayer.data.datasource.db
 
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.musicplayer.common.utils.BitmapConverters
 import com.example.musicplayer.domain.models.Mp3FilesDataClass
 
 
-@Database(entities = [Mp3FilesDataClass::class], version = 1, exportSchema = false)
+@Database(entities = [Mp3FilesDataClass::class], version = 2, exportSchema = false)
+@TypeConverters(BitmapConverters::class)
 abstract class FavDatabase : RoomDatabase() {
     abstract fun favDao(): FavSongsDao
 }

@@ -44,7 +44,7 @@ class RecentSongsAdapter() : RecyclerView.Adapter<RecentSongsAdapter.RecentSongs
         val truncatedTitle = musicList[position].title.take(maxLength)
         holder.binding.apply {
 
-            Glide.with(context).asBitmap().load(musicList[position].albumArt)
+            Glide.with(context).asBitmap().load(musicList[position].path)
                 .placeholder(R.drawable.playingnow).into(coverImage)
             txtSongName.text = truncatedTitle
             txtArtistName.text = musicList[position].artist

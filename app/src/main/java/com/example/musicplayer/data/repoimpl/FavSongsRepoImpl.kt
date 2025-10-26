@@ -13,4 +13,8 @@ class FavSongsRepoImpl(val favSource: FavSongsDataSource) : FavSongsRepo {
     override suspend fun insertFav(favSong: Mp3FilesDataClass) {
         favSource.insertFav(favSong)
     }
+
+    override suspend fun removeFav(removeSong: Mp3FilesDataClass) {
+        favSource.removeFav(removeSong)
+    }
 }

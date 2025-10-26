@@ -15,4 +15,8 @@ class FavSongsDataSource @Inject constructor(val favDao: FavSongsDao) {
         favDao.insertFav(favSong)
     }
 
+    suspend fun removeFav(removeSong: Mp3FilesDataClass){
+        favDao.removeFav(removeSong)
+    }
+
 }

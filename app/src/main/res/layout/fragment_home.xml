@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:contentDescription="@string/image_here"
-                android:src="@drawable/heartfilled" />
+                android:src="@drawable/heart_empty" />
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -49,9 +49,6 @@ class MainActivity : AppCompatActivity() {
 
     private val myViewModel: MainViewModel by viewModels()
     private lateinit var navController: NavController
-    private val _mp3Files = MutableStateFlow<List<Mp3FilesDataClass>>(emptyList())
-    val mp3Files: StateFlow<List<Mp3FilesDataClass>> = _mp3Files.asStateFlow()
-
 
     // Handle permission result once for all Android versions
     private val permissionLauncher =
@@ -78,11 +75,13 @@ class MainActivity : AppCompatActivity() {
         initClickListener()
     }
 
-    fun initClickListener(){
+    fun initClickListener() {
         binding.linearMusic.setOnOneClickListener {
             binding.ivMusic.imageTintList = ColorStateList.valueOf(getColor(R.color.itemSelected))
-            binding.ivArtist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-            binding.ivPlaylist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivArtist.imageTintList =
+                ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivPlaylist.imageTintList =
+                ColorStateList.valueOf(getColor(R.color.itemUnSelected))
             binding.ivFav.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
 
             navController.navigate(R.id.myMusicFragment)
@@ -90,32 +89,40 @@ class MainActivity : AppCompatActivity() {
         binding.linearArtist.setOnOneClickListener {
             binding.ivMusic.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
             binding.ivArtist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemSelected))
-            binding.ivPlaylist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivPlaylist.imageTintList =
+                ColorStateList.valueOf(getColor(R.color.itemUnSelected))
             binding.ivFav.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
             navController.navigate(R.id.artistFragment)
         }
         binding.linearHome.setOnOneClickListener {
             binding.ivMusic.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-            binding.ivArtist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-            binding.ivPlaylist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivArtist.imageTintList =
+                ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivPlaylist.imageTintList =
+                ColorStateList.valueOf(getColor(R.color.itemUnSelected))
             binding.ivFav.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
             navController.navigate(R.id.homeFragment)
         }
         binding.linearPlaylist.setOnOneClickListener {
             binding.ivMusic.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-            binding.ivArtist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-            binding.ivPlaylist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemSelected))
+            binding.ivArtist.imageTintList =
+                ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivPlaylist.imageTintList =
+                ColorStateList.valueOf(getColor(R.color.itemSelected))
             binding.ivFav.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
             navController.navigate(R.id.playListFragment)
         }
         binding.linearFavourite.setOnOneClickListener {
             binding.ivMusic.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-            binding.ivArtist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
-            binding.ivPlaylist.imageTintList = ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivArtist.imageTintList =
+                ColorStateList.valueOf(getColor(R.color.itemUnSelected))
+            binding.ivPlaylist.imageTintList =
+                ColorStateList.valueOf(getColor(R.color.itemUnSelected))
             binding.ivFav.imageTintList = ColorStateList.valueOf(getColor(R.color.itemSelected))
             navController.navigate(R.id.favouriteFragment)
         }
     }
+
     /**
      * Hides the ActionBar for fullscreen experience.
      */
@@ -127,24 +134,19 @@ class MainActivity : AppCompatActivity() {
      * Initializes ViewModel and loads songs.
      */
     private fun setupViewModel() {
-
         loadSongs()
     }
 
     private fun loadSongs() {
-        lifecycleScope.launch(IO) {
-
-            myViewModel.getLocalMp3Files().collect {
-                Log.d("checkSongs", "loadSongs:$it ")
-                _mp3Files.value=it
-            }
-        }
+        myViewModel.getLocalMp3Files()
+        myViewModel.getAllFavSongs()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _instance = null
     }
+
     /**
      * Sets up NavController for navigation.
      */
@@ -210,20 +212,23 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun setupBottomMusicPlayer( mp3Songs: Mp3FilesDataClass){
+    fun setupBottomMusicPlayer(mp3Songs: Mp3FilesDataClass) {
 
     }
+
     fun hideTopBarAndBottomBar() {
         binding.groupTopBar.hide()
         binding.clBottomNav.hide()
     }
 
-    fun showBottomPlayer(){
+    fun showBottomPlayer() {
         binding.clBottomMusicPlayer.show()
     }
-    fun hideBottomPlayer(){
+
+    fun hideBottomPlayer() {
         binding.clBottomMusicPlayer.hide()
     }
+
     fun showTopBarAndBottomBar() {
         binding.groupTopBar.show()
         binding.clBottomNav.show()

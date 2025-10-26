@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.musicplayer.R
 import com.example.musicplayer.adapter.AllArtistAdapter
@@ -17,15 +18,18 @@ import com.example.musicplayer.domain.models.Mp3FilesDataClass
 import com.example.musicplayer.databinding.FragmentArtistBinding
 import com.example.musicplayer.interfaces.BottomMenuClickInterface
 import com.example.musicplayer.presentation.activities.MainActivity
+import com.example.musicplayer.viewModel.MainViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import kotlin.getValue
 
 class ArtistFragment : Fragment(), BottomMenuClickInterface {
     private lateinit var binding: FragmentArtistBinding
     private lateinit var allArtistAdapter: AllArtistAdapter
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -36,11 +40,11 @@ class ArtistFragment : Fragment(), BottomMenuClickInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        initClickListener()
+
 
         lifecycleScope.launch(IO) {
 
-             (activity as MainActivity).mp3Files.collect { allArtists ->
+            mainViewModel.mp3Files.collect { allArtists ->
 
                  Log.i("test", "My Music Frag->${allArtists.size} ")
                  setUpRecyclerView(allArtists)
@@ -48,23 +52,6 @@ class ArtistFragment : Fragment(), BottomMenuClickInterface {
         }
     }
 
-    fun initClickListener() {
-        (activity as MainActivity).binding.linearMusic.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.myMusicFragment)
-        }
-        (activity as MainActivity).binding.linearArtist.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.artistFragment)
-        }
-        (activity as MainActivity).binding.linearHome.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.homeFragment)
-        }
-        (activity as MainActivity).binding.linearPlaylist.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.playListFragment)
-        }
-        (activity as MainActivity).binding.linearFavourite.setOnOneClickListener {
-            findNavControllerSafely()?.navigate(R.id.favourite)
-        }
-    }
 
     private fun setUpRecyclerView(mp3Files: List<Mp3FilesDataClass>) {
         activity?.let { context ->

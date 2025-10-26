@@ -86,8 +86,7 @@ class LocalDataSource@Inject constructor(
                             artist = artist,
                             album = album,
                             duration = duration,
-                            path = path,
-                            albumArt = albumArt
+                            path = path
                         )
                     )
                 }

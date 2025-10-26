@@ -1,6 +1,7 @@
 package com.example.musicplayer.data.datasource.db
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -15,5 +16,10 @@ interface FavSongsDao {
     suspend fun insertFav(favSong: Mp3FilesDataClass)
 
     @Query("SELECT * FROM fav_songs")
-    suspend fun getAllFavSongs(): Flow<List<Mp3FilesDataClass>>
+     fun getAllFavSongs(): Flow<List<Mp3FilesDataClass>>
+
+    @Delete
+    suspend fun removeFav(favSong: Mp3FilesDataClass)
+
+
 }
