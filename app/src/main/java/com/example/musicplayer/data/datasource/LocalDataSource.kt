@@ -1,14 +1,11 @@
 package com.example.musicplayer.data.datasource
 
-import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.provider.MediaStore
 import android.util.Log
-import com.example.musicplayer.common.MyApplication
 import com.example.musicplayer.domain.models.Mp3FilesDataClass
-import dagger.hilt.android.internal.Contexts.getApplication
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

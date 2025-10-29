@@ -1,6 +1,5 @@
-package com.example.musicplayer.adapter
+package com.example.musicplayer.presentation.homeScreen
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

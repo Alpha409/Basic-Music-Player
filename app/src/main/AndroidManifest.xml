@@ -23,7 +23,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".presentation.activities.MainActivity"
+            android:name=".common.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>

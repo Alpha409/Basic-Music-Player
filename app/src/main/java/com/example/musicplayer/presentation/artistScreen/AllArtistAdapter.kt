@@ -1,4 +1,4 @@
-package com.example.musicplayer.adapter
+package com.example.musicplayer.presentation.artistScreen
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -14,13 +14,13 @@ import com.example.musicplayer.domain.models.Mp3FilesDataClass
 import com.example.musicplayer.interfaces.BottomMenuClickInterface
 
 class AllArtistAdapter(
-    private val context: Context, private var Mp3ModelClass: List<Mp3FilesDataClass>,private val showBottomMenu:BottomMenuClickInterface
+    private val context: Context, private var Mp3ModelClass: List<Mp3FilesDataClass>, private val showBottomMenu: BottomMenuClickInterface
 ) : RecyclerView.Adapter<AllArtistAdapter.AllArtistViewHolder>() {
     class AllArtistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtArtistName: TextView = itemView.findViewById(R.id.txt_artist_name)
         val txtArtistSongs: TextView = itemView.findViewById(R.id.txt_artist_songs)
         val songImage: ImageView = itemView.findViewById(R.id.iv_song_image)
-        val bottomMenu:LinearLayout=itemView.findViewById(R.id.linear_menu)
+        val bottomMenu: LinearLayout =itemView.findViewById(R.id.linear_menu)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllArtistViewHolder {

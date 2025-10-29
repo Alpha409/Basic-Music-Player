@@ -1,21 +1,20 @@
-package com.example.musicplayer.presentation.fragments
+package com.example.musicplayer.presentation.splashScreen
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.musicplayer.R
+import com.example.musicplayer.common.MainActivity
 import com.example.musicplayer.common.extensionFunctions.NavigationExtensionF.findNavControllerSafely
 import com.example.musicplayer.common.extensionFunctions.NavigationExtensionF.navigateAndClearStack
 import com.example.musicplayer.databinding.FragmentSplashBinding
-import com.example.musicplayer.presentation.activities.MainActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 
 class SplashFragment : Fragment() {
 
@@ -31,8 +30,8 @@ class SplashFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        MainActivity.instance?.hideTopBarAndBottomBar()
-        MainActivity.instance?.hideBottomPlayer()
+        MainActivity.Companion.instance?.hideTopBarAndBottomBar()
+        MainActivity.Companion.instance?.hideBottomPlayer()
         launchHomeScreen()
     }
 

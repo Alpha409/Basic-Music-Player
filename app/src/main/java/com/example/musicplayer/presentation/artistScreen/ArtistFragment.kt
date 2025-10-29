@@ -1,4 +1,4 @@
-package com.example.musicplayer.presentation.fragments
+package com.example.musicplayer.presentation.artistScreen
 
 import android.os.Bundle
 import android.os.Handler
@@ -11,20 +11,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.musicplayer.R
-import com.example.musicplayer.adapter.AllArtistAdapter
-import com.example.musicplayer.common.extensionFunctions.NavigationExtensionF.findNavControllerSafely
-import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.setOnOneClickListener
-import com.example.musicplayer.domain.models.Mp3FilesDataClass
+import com.example.musicplayer.presentation.artistScreen.AllArtistAdapter
+import com.example.musicplayer.common.MainActivity
 import com.example.musicplayer.databinding.FragmentArtistBinding
+import com.example.musicplayer.domain.models.Mp3FilesDataClass
 import com.example.musicplayer.interfaces.BottomMenuClickInterface
-import com.example.musicplayer.presentation.activities.MainActivity
 import com.example.musicplayer.viewModel.MainViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
 class ArtistFragment : Fragment(), BottomMenuClickInterface {
     private lateinit var binding: FragmentArtistBinding
@@ -42,7 +37,7 @@ class ArtistFragment : Fragment(), BottomMenuClickInterface {
         super.onViewCreated(view, savedInstanceState)
 
 
-        lifecycleScope.launch(IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
 
             mainViewModel.mp3Files.collect { allArtists ->
 

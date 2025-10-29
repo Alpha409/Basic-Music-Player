@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".presentation.fragments.HomeFragment">
+    tools:context=".presentation.homeScreen.HomeFragment">
 
     <TextView
         android:id="@+id/txt_now_playing"

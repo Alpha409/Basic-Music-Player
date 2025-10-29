@@ -1,11 +1,7 @@
-package com.example.musicplayer.adapter
+package com.example.musicplayer.presentation.musicScreen
 
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicplayer.R
@@ -67,6 +63,10 @@ class AllSongsAdapter(
                 allSongsClick?.onFavClick(song, position)
             }
 
+            this.linearNames.setOnOneClickListener {
+                allSongsClick?.onItemClick(allSongs[position],position)
+            }
+
         }
     }
 
@@ -78,5 +78,7 @@ class AllSongsAdapter(
 
     interface AllSongsClickListener {
         fun onFavClick(favSong: Mp3FilesDataClass, position: Int)
+
+        fun onItemClick(songClick: Mp3FilesDataClass,position: Int)
     }
 }

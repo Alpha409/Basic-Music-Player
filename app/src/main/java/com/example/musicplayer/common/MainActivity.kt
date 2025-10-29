@@ -1,5 +1,4 @@
-package com.example.musicplayer.presentation.activities
-
+package com.example.musicplayer.common
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -7,7 +6,6 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.PopupMenu
@@ -15,31 +13,19 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.musicplayer.R
-import com.example.musicplayer.common.extensionFunctions.NavigationExtensionF.findNavControllerSafely
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.hide
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.setOnOneClickListener
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.show
-import com.example.musicplayer.domain.models.Mp3FilesDataClass
 import com.example.musicplayer.databinding.ActivityMainBinding
+import com.example.musicplayer.domain.models.Mp3FilesDataClass
 import com.example.musicplayer.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import java.util.concurrent.Flow
-import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -151,8 +137,8 @@ class MainActivity : AppCompatActivity() {
      * Sets up NavController for navigation.
      */
     private fun setupNavigation() {
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navController = navHostFragment.navController
     }
 
@@ -221,8 +207,23 @@ class MainActivity : AppCompatActivity() {
         binding.clBottomNav.hide()
     }
 
-    fun showBottomPlayer() {
+    fun showBottomPlayer(songName: String, isPlaying: Boolean, isFav: Boolean) {
         binding.clBottomMusicPlayer.show()
+        binding.txtSongName.text = songName
+
+        if (isPlaying){
+            binding.btnPlayPause.setImageResource(R.drawable.play)
+        }else{
+            binding.btnPlayPause.setImageResource(R.drawable.ic_pause)
+        }
+
+        if (isFav){
+            binding.btnFav.setImageResource(R.drawable.heartfilled)
+        }else{
+            binding.btnFav.setImageResource(R.drawable.heart_empty)
+        }
+
+
     }
 
     fun hideBottomPlayer() {
