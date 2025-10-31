@@ -1,6 +1,7 @@
 package com.example.musicplayer.presentation.artistScreen
 
 import android.content.Context
+import android.media.MediaMetadataRetriever
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,7 +38,15 @@ class AllArtistAdapter(
         holder.bottomMenu.setOnClickListener {
             showBottomMenu.showBottomMenu(Mp3ModelClass[position])
         }
-        Glide.with(context).asBitmap().load(Mp3ModelClass[position].path)
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(Mp3ModelClass[position].path)
+
+// 2. Extract the embedded picture (album art) as a byte array
+        val albumArt = retriever.embeddedPicture
+
+// 3. Close the retriever
+        retriever.release()
+        Glide.with(context).load(albumArt)
             .placeholder(R.drawable.playingnow).into(holder.songImage)
         holder.txtArtistName.text = Mp3ModelClass[position].artist
         holder.txtArtistSongs.text = Mp3ModelClass[position].artist

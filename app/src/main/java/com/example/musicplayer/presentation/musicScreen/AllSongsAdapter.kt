@@ -1,5 +1,6 @@
 package com.example.musicplayer.presentation.musicScreen
 
+import android.media.MediaMetadataRetriever
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -33,9 +34,31 @@ class AllSongsAdapter(
 
     override fun onBindViewHolder(holder: AllSongsViewHolder, position: Int) {
         val context = holder.binding.root.context
+
+        val audioFilePath = allSongs[position].path
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(audioFilePath)
+
+// 2. Extract the embedded picture (album art) as a byte array
+        val albumArt = retriever.embeddedPicture
+
+// 3. Close the retriever
+        retriever.release()
         holder.binding.apply {
-            Glide.with(context).asBitmap().load(allSongs[position].path)
-                .placeholder(R.drawable.playingnow).into(this.ivSongImage)
+        if (albumArt != null) {
+            // 4. Use Glide to load the byte array directly into the ImageView
+            Glide.with(context)
+                .load(albumArt) // Glide can load byte arrays!
+                .placeholder(R.drawable.iv_dummy_song)
+                .into(this.ivSongImage)
+        } else {
+            // 5. If no album art is embedded, just load the placeholder
+            this.ivSongImage.setImageResource(R.drawable.iv_dummy_song)
+        }
+
+
+/*            Glide.with(context).asBitmap().load(allSongs[position].path)
+                .placeholder(R.drawable.iv_dummy_song).into(this.ivSongImage)*/
             this.txtSongName.text = allSongs[position].title
             this.txtArtistName.text = allSongs[position].artist
 

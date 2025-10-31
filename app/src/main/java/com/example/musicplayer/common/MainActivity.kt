@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
@@ -16,16 +17,23 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.bumptech.glide.Glide
 import com.example.musicplayer.R
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.hide
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.setOnOneClickListener
 import com.example.musicplayer.common.extensionFunctions.ViewsExtensionF.show
+import com.example.musicplayer.common.utils.Utils
 import com.example.musicplayer.databinding.ActivityMainBinding
 import com.example.musicplayer.domain.models.Mp3FilesDataClass
 import com.example.musicplayer.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -198,29 +206,75 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun setupBottomMusicPlayer(mp3Songs: Mp3FilesDataClass) {
-
-    }
-
     fun hideTopBarAndBottomBar() {
         binding.groupTopBar.hide()
         binding.clBottomNav.hide()
     }
 
-    fun showBottomPlayer(songName: String, isPlaying: Boolean, isFav: Boolean) {
-        binding.clBottomMusicPlayer.show()
-        binding.txtSongName.text = songName
+    fun showBottomPlayer(songItem: Mp3FilesDataClass, isPlaying: Boolean, isFav: Boolean) {
 
-        if (isPlaying){
-            binding.btnPlayPause.setImageResource(R.drawable.play)
-        }else{
+        var currentFavStatus = isFav
+        binding.clBottomMusicPlayer.show()
+        binding.txtSongName.text = songItem.title
+
+        binding.txtArtistName.text = songItem.artist
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(songItem.path)
+
+// 2. Extract the embedded picture (album art) as a byte array
+        val albumArt = retriever.embeddedPicture
+
+// 3. Close the retriever
+        retriever.release()
+
+        Glide.with(this).load(albumArt).placeholder(R.drawable.iv_dummy_song)
+            .into(binding.ivSongImage)
+
+        if (isPlaying) {
             binding.btnPlayPause.setImageResource(R.drawable.ic_pause)
+        } else {
+            binding.btnPlayPause.setImageResource(R.drawable.play)
         }
 
-        if (isFav){
+        if (currentFavStatus) {
             binding.btnFav.setImageResource(R.drawable.heartfilled)
-        }else{
+        } else {
             binding.btnFav.setImageResource(R.drawable.heart_empty)
+        }
+
+        binding.btnPlayPause.setOnOneClickListener {
+            if (Utils.getPlayer()?.isPlaying == true) {
+                binding.btnPlayPause.setImageResource(R.drawable.play)
+                Utils.getPlayer()?.pause()
+            } else {
+                binding.btnPlayPause.setImageResource(R.drawable.ic_pause)
+                Utils.getPlayer()?.play()
+
+            }
+        }
+
+
+        binding.btnFav.setOnOneClickListener {
+            if (currentFavStatus) {
+                lifecycleScope.launch(IO) {
+                    myViewModel.removeFav(songItem)
+                    currentFavStatus = false
+                    withContext(Main) {
+
+                        binding.btnFav.setImageResource(R.drawable.heart_empty)
+                    }
+                }
+            } else {
+                lifecycleScope.launch(IO) {
+                    myViewModel.insertFav(songItem)
+
+                    currentFavStatus = true
+                    withContext(Main) {
+
+                        binding.btnFav.setImageResource(R.drawable.heartfilled)
+                    }
+                }
+            }
         }
 
 

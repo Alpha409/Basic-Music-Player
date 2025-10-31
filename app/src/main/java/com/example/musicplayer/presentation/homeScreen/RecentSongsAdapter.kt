@@ -1,5 +1,6 @@
 package com.example.musicplayer.presentation.homeScreen
 
+import android.media.MediaMetadataRetriever
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -42,9 +43,16 @@ class RecentSongsAdapter() : RecyclerView.Adapter<RecentSongsAdapter.RecentSongs
         val context= holder.binding.root.context
         val truncatedTitle = musicList[position].title.take(maxLength)
         holder.binding.apply {
+            val retriever = MediaMetadataRetriever()
+            retriever.setDataSource(musicList[position].path)
 
-            Glide.with(context).asBitmap().load(musicList[position].path)
-                .placeholder(R.drawable.playingnow).into(coverImage)
+// 2. Extract the embedded picture (album art) as a byte array
+            val albumArt = retriever.embeddedPicture
+
+// 3. Close the retriever
+            retriever.release()
+            Glide.with(context).load(albumArt)
+                .placeholder(R.drawable.iv_dummy_song).into(coverImage)
             txtSongName.text = truncatedTitle
             txtArtistName.text = musicList[position].artist
             mainLayout.setOnClickListener {

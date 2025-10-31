@@ -65,13 +65,22 @@
         android:id="@+id/clBottomMusicPlayer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_12sdp"
-        android:layout_marginBottom="@dimen/_4sdp"
-        android:background="@drawable/bg_rectangle_round"
-        android:paddingVertical="@dimen/_8sdp"
+        android:background="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/clBottomNav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/ivSongImage"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_45sdp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/iv_dummy_song"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
 
         <TextView
             android:id="@+id/txtSongName"
@@ -81,10 +90,25 @@
             android:layout_marginEnd="@dimen/_8sdp"
             android:text="Song Name"
             android:textColor="@color/white"
+            android:textSize="@dimen/_12sdp"
+            app:layout_constraintBottom_toTopOf="@+id/txtArtistName"
+            app:layout_constraintEnd_toStartOf="@+id/btnPlayPause"
+            app:layout_constraintStart_toEndOf="@+id/ivSongImage"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtArtistName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:text="Artist Name"
+            android:textColor="@color/itemUnSelected"
+            android:textSize="@dimen/_10sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnPlayPause"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/ivSongImage"
+            app:layout_constraintTop_toBottomOf="@+id/txtSongName" />
 
         <ImageView
             android:id="@+id/btnPlayPause"

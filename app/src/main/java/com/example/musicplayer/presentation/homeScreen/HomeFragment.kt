@@ -1,8 +1,6 @@
 package com.example.musicplayer.presentation.homeScreen
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +9,6 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import com.example.musicplayer.presentation.homeScreen.RecentSongsAdapter
 import com.example.musicplayer.common.MainActivity
 import com.example.musicplayer.common.extensionFunctions.LoadingDialog
 import com.example.musicplayer.common.extensionFunctions.LoadingDialog.showLoadingDialog
@@ -48,28 +45,24 @@ class HomeFragment : Fragment(), RecentSongsAdapter.PlaySongClickListenerInterfa
                 LoadingDialog.hideLoadingDialog()
                 Log.i("test", "${filesFetched.size}")
                 mp3Files.addAll(filesFetched)
+                setUpRecyclerView(filesFetched)
 
             }
         }
-        setUpRecyclerView()
+
         recentAdapter.clickListener = this
         setHomePlayerUI()
     }
 
 
-    private fun setUpRecyclerView() {
-        activity?.let { context ->
-            if (::binding.isInitialized) {
-                binding.recyclerRecentSongs.apply {
-                    setHasFixedSize(true)
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.post { adapter = recentAdapter }
+    private fun setUpRecyclerView(filesFetched: List<Mp3FilesDataClass>) {
 
-                    recentAdapter.setData(mp3Files)
 
-                }
-            }
-        }
+        binding.recyclerRecentSongs.adapter = recentAdapter
+
+        recentAdapter.setData(filesFetched)
+
+
     }
 
     fun setHomePlayerUI() {

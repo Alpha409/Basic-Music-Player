@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +14,7 @@ import com.example.musicplayer.common.MainActivity
 import com.example.musicplayer.presentation.musicScreen.AllSongsAdapter
 import com.example.musicplayer.common.extensionFunctions.LoadingDialog
 import com.example.musicplayer.common.extensionFunctions.LoadingDialog.showLoadingDialog
+import com.example.musicplayer.common.utils.Utils
 import com.example.musicplayer.databinding.FragmentMyMusicBinding
 import com.example.musicplayer.domain.models.Mp3FilesDataClass
 import com.example.musicplayer.viewModel.MainViewModel
@@ -82,7 +84,7 @@ class MyMusicFragment : Fragment(), AllSongsAdapter.AllSongsClickListener {
                 withContext(Dispatchers.Main) {
                     allSongsAdapter.notifyItemChanged(position)
                     Toast.makeText(
-                        activity, "Song removed from favorites successfully", Toast.LENGTH_SHORT
+                        activity, "Song added to favorites successfully", Toast.LENGTH_SHORT
                     ).show()
                 }
             } else {
@@ -91,7 +93,7 @@ class MyMusicFragment : Fragment(), AllSongsAdapter.AllSongsClickListener {
                 withContext(Dispatchers.Main) {
                     allSongsAdapter.notifyItemChanged(position)
                     Toast.makeText(
-                        activity, "Song added to favorites successfully", Toast.LENGTH_SHORT
+                        activity, "Song removed from favorites successfully", Toast.LENGTH_SHORT
                     ).show()
                 }
             }
@@ -99,13 +101,17 @@ class MyMusicFragment : Fragment(), AllSongsAdapter.AllSongsClickListener {
     }
 
     override fun onItemClick(
-        songClick: Mp3FilesDataClass,
-        position: Int
+        songClick: Mp3FilesDataClass, position: Int
     ) {
+        activity?.let {
+
+            Utils.playMedia(it, songClick.path.toUri())
+        }
+
+
+
         MainActivity.instance?.showBottomPlayer(
-            songName = songClick.title,
-            isPlaying = true,
-            isFav = songClick.isFav
+            songItem = songClick, isPlaying = true, isFav = songClick.isFav
         )
     }
 }
