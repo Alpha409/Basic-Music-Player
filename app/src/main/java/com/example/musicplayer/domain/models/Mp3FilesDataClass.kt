@@ -14,5 +14,6 @@ data class Mp3FilesDataClass(
     val album: String?,
     val duration: Long,
     val path: String,
-    var isFav: Boolean = false
+    var isFav: Boolean = false,
+    val dateAdded: Long? = null
 )

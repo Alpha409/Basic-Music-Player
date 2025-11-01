@@ -43,8 +43,6 @@ class MyMusicFragment : Fragment(), AllSongsAdapter.AllSongsClickListener {
         activity?.showLoadingDialog()
         lifecycleScope.launch(Dispatchers.IO) {
             mainViewModel.mp3Files.collect { allSongs ->
-
-                Log.i("checkSongs", "My Music Frag->${allSongs.size} ")
                 withContext(Dispatchers.Main) {
                     LoadingDialog.hideLoadingDialog()
                     setUpRecyclerView(allSongs)
@@ -80,7 +78,7 @@ class MyMusicFragment : Fragment(), AllSongsAdapter.AllSongsClickListener {
     override fun onFavClick(favSong: Mp3FilesDataClass, position: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
             if (favSong.isFav) {
-                mainViewModel.removeFav(favSong)
+                mainViewModel.insertFav(favSong)
                 withContext(Dispatchers.Main) {
                     allSongsAdapter.notifyItemChanged(position)
                     Toast.makeText(
@@ -89,7 +87,7 @@ class MyMusicFragment : Fragment(), AllSongsAdapter.AllSongsClickListener {
                 }
             } else {
 
-                mainViewModel.insertFav(favSong)
+                mainViewModel.removeFav(favSong)
                 withContext(Dispatchers.Main) {
                     allSongsAdapter.notifyItemChanged(position)
                     Toast.makeText(

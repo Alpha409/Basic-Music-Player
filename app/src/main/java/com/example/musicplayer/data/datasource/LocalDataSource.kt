@@ -29,9 +29,12 @@ class LocalDataSource@Inject constructor(
             MediaStore.Audio.Media.ALBUM,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.DATA,
-            MediaStore.Audio.Media.ALBUM_ID
+            MediaStore.Audio.Media.ALBUM_ID,
+            MediaStore.Audio.Media.DATE_ADDED // 👈 added this
         )
-        val sortOrder = "${MediaStore.Audio.Media.TITLE} ASC"
+
+        // 👇 Sort by date added (newest first)
+        val sortOrder = "${MediaStore.Audio.Media.DATE_ADDED} DESC"
 
         withContext(Dispatchers.IO) {
             resolver.query(
@@ -48,10 +51,12 @@ class LocalDataSource@Inject constructor(
                 val durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
                 val pathColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
                 val albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
+                val dateAddedColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED)
 
                 val albumArtProjection = arrayOf(MediaStore.Audio.Albums.ALBUM_ART)
 
-                while (cursor.moveToNext()) {
+                var count = 0
+                while (cursor.moveToNext() && count < 20) { // 👈 Limit to latest 20 songs
                     val id = cursor.getLong(idColumn)
                     val title = cursor.getString(titleColumn)
                     val artist = cursor.getString(artistColumn)
@@ -59,6 +64,7 @@ class LocalDataSource@Inject constructor(
                     val duration = cursor.getLong(durationColumn)
                     val path = cursor.getString(pathColumn)
                     val albumId = cursor.getLong(albumIdColumn)
+                    val dateAdded = cursor.getLong(dateAddedColumn)
 
                     var albumArt: Bitmap? = null
                     resolver.query(
@@ -83,16 +89,20 @@ class LocalDataSource@Inject constructor(
                             artist = artist,
                             album = album,
                             duration = duration,
-                            path = path
+                            path = path,
+                            // Optional: add new field if your data class supports it
+                            dateAdded = dateAdded
                         )
                     )
+                    count++
                 }
             }
         }
 
-        Log.i("Mp3Loader", "Loaded ${mp3List.size} mp3 files")
+        Log.i("Mp3Loader", "Loaded ${mp3List.size} recent mp3 files")
         emit(mp3List)
     }
+
 
 
 }

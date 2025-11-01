@@ -7,7 +7,7 @@ import com.example.musicplayer.common.utils.BitmapConverters
 import com.example.musicplayer.domain.models.Mp3FilesDataClass
 
 
-@Database(entities = [Mp3FilesDataClass::class], version = 2, exportSchema = false)
+@Database(entities = [Mp3FilesDataClass::class], version = 3, exportSchema = false)
 @TypeConverters(BitmapConverters::class)
 abstract class FavDatabase : RoomDatabase() {
     abstract fun favDao(): FavSongsDao

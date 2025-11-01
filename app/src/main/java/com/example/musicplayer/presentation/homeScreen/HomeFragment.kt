@@ -60,6 +60,7 @@ class HomeFragment : Fragment(), RecentSongsAdapter.PlaySongClickListenerInterfa
 
         binding.recyclerRecentSongs.adapter = recentAdapter
 
+
         recentAdapter.setData(filesFetched)
 
 

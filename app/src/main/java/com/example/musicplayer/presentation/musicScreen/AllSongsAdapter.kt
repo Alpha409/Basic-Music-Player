@@ -1,6 +1,8 @@
 package com.example.musicplayer.presentation.musicScreen
 
+import android.content.ContentUris
 import android.media.MediaMetadataRetriever
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -35,9 +37,18 @@ class AllSongsAdapter(
     override fun onBindViewHolder(holder: AllSongsViewHolder, position: Int) {
         val context = holder.binding.root.context
 
-        val audioFilePath = allSongs[position].path
+
         val retriever = MediaMetadataRetriever()
-        retriever.setDataSource(audioFilePath)
+        try {
+            val uri = ContentUris.withAppendedId(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                allSongs[position].id
+            )
+            retriever.setDataSource(holder.itemView.context, uri) // ✅ safer
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
 
 // 2. Extract the embedded picture (album art) as a byte array
         val albumArt = retriever.embeddedPicture

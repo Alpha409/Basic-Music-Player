@@ -1,6 +1,8 @@
 package com.example.musicplayer.presentation.homeScreen
 
+import android.content.ContentUris
 import android.media.MediaMetadataRetriever
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -44,7 +46,16 @@ class RecentSongsAdapter() : RecyclerView.Adapter<RecentSongsAdapter.RecentSongs
         val truncatedTitle = musicList[position].title.take(maxLength)
         holder.binding.apply {
             val retriever = MediaMetadataRetriever()
-            retriever.setDataSource(musicList[position].path)
+            try {
+                val uri = ContentUris.withAppendedId(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    musicList[position].id
+                )
+                retriever.setDataSource(holder.itemView.context, uri) // ✅ safer
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
 
 // 2. Extract the embedded picture (album art) as a byte array
             val albumArt = retriever.embeddedPicture

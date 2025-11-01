@@ -23,7 +23,8 @@ class DatabaseModule {
             context.applicationContext,
             FavDatabase::class.java,
             "my_fav_db"
-        ).build()
+        ).fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides
