@@ -102,11 +102,10 @@ class MyMusicFragment : Fragment(), AllSongsAdapter.AllSongsClickListener {
         songClick: Mp3FilesDataClass, position: Int
     ) {
         activity?.let {
-
+            Utils.initPlayer(it)
             Utils.playMedia(it, songClick.path.toUri())
         }
-
-
+        Utils.currentSong =songClick
 
         MainActivity.instance?.showBottomPlayer(
             songItem = songClick, isPlaying = true, isFav = songClick.isFav

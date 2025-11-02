@@ -30,7 +30,10 @@ class HomeFragment : Fragment(), RecentSongsAdapter.PlaySongClickListenerInterfa
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
-        MainActivity.Companion.instance?.hideBottomPlayer()
+        if (Utils.getPlayer()?.isPlaying == false) {
+
+            MainActivity.Companion.instance?.hideBottomPlayer()
+        }
         return binding.root
     }
 
@@ -79,6 +82,7 @@ class HomeFragment : Fragment(), RecentSongsAdapter.PlaySongClickListenerInterfa
             Utils.initPlayer(fragmentActivity)
             Utils.playMedia(fragmentActivity, songModel.path.toUri())
             setHomePlayerUI()
+
         }
 
 

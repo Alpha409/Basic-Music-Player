@@ -2,12 +2,15 @@ package com.example.musicplayer.common.utils
 
 import android.content.Context
 import android.net.Uri
+import com.example.musicplayer.domain.models.Mp3FilesDataClass
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 
 object Utils {
 
     private var exoPlayer: ExoPlayer? = null
+
+    var currentSong: Mp3FilesDataClass? = null
 
     /**
      * Initialize ExoPlayer if not already created.
