@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         setupMenuButton()
         requestStoragePermissionsIfNeeded()
         initClickListener()
+        Utils.initPlayer(this)
     }
 
     fun initClickListener() {
@@ -139,6 +140,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _instance = null
+        Utils.releasePlayer()
     }
 
     /**
@@ -344,6 +346,8 @@ class MainActivity : AppCompatActivity() {
         }
         popupMenu.show()
     }
+
+
 
     companion object {
         @Volatile
